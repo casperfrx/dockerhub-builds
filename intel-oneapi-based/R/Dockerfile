@@ -8,6 +8,7 @@ ARG MAKE_COMPILER_CORE_COUNT_MULTIPLIER=1
 RUN true \
     &&  dnf install -y \
             epel-release \
+    &&  dnf config-manager --set-enabled powertools \
     &&  dnf install -y \
             git \
             unzip \
@@ -21,7 +22,6 @@ RUN true \
             libcurl-devel \
             openssl-devel \
             libxml2-devel \
-    &&  dnf config-manager --set-enabled powertools \
     &&  dnf clean all \
     &&  rm -rf \
         /{tmp,var/tmp}/* \
@@ -32,6 +32,10 @@ RUN true \
         /usr/local/lib/R/site-library \
     &&  R --slave --no-restore --method=curl --Ncpus="$(expr $(nproc) \* ${MAKE_COMPILER_CORE_COUNT_MULTIPLIER})" --clean \
         -e "install.packages(c('httr', 'RJSONIO', 'dplyr','curl', 'IRkernel', 'sparklyr','ggplot2', 'gtools', 'tidyr', 'rmarkdown','base64enc', 'filelock'),'/usr/local/lib/R/site-library',repos='https://cloud.r-project.org')" \
+    &&  find /usr/share/man \
+         /usr/share/doc \
+         /var/log \
+         -type f -exec rm -f {} + \
     &&  rm -rf \
         /{tmp,var/tmp}/* \
     &&  true
