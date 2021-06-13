@@ -32,7 +32,7 @@ RUN true \
 
 RUN true \
     &&  set -o pipefail \
-    &&  for i in $(echo $BUILD_PYTHON_VERSIONS | sed "s/,/ /g"); \
+    &&  for i in $(echo "$BUILD_PYTHON_VERSIONS" | sed "s/,/ /g"); \
         do \
             echo "Building Python $i" \
             &&  curl -sS \
@@ -42,6 +42,7 @@ RUN true \
             &&  ./configure \
                     --enable-optimizations \
                     --with-lto \
+                    --enable-shared \
                     --with-system-expat \
                     --with-system-ffi \
                     --with-computed-gotos \
@@ -58,5 +59,19 @@ RUN true \
             &&  rm -rf \
                 /{tmp,var/tmp}/*; \
         done \
-    &&  strip /usr/local/lib/libpython{3.6m.a,libpython3.8.a,libpython3.9.a}  \
+    &&  find /usr/local -type f -name "*.so" -exec strip --strip-unneeded {} + \
+    &&   ldconfig \
+    &&   find /usr/local -depth \
+        \( \
+            \( -type d -a \( -name test -o -name tests -o -name __pycache__ \) \) \
+            -o \
+            \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
+            -o \
+            \( -name "idle*" \) \
+        \) -exec rm -rf '{}' +  \
+    &&  find /usr/share/man \
+             /usr/share/doc \
+             /var/log \
+             -type f -exec rm -f {} + \
+    &&  /sbin/ldconfig \
     &&  true
