@@ -15,11 +15,16 @@ RUN true \
             unzip \
             zip \
             curl \
+            diffutils \
             openssl \
             libgfortran \
             libgomp \
+            openssl-devel \
+            bzip2-devel \
+            sqlite-devel \
             zlib-devel \
             expat-devel \
+            readline-devel \
     &&  dnf clean all \
     &&  rm -rf \
         /{tmp,var/tmp}/* \
