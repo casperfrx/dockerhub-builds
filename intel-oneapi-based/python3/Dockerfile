@@ -18,6 +18,8 @@ RUN true \
             openssl \
             libgfortran \
             libgomp \
+            zlib-devel \
+            expat-devel \
     &&  dnf clean all \
     &&  rm -rf \
         /{tmp,var/tmp}/* \
@@ -38,6 +40,7 @@ RUN true \
                     --with-system-expat \
                     --with-system-ffi \
                     --with-computed-gotos \
+                    --with-threads \
                     --enable-loadable-sqlite-extensions \
                     --with-ensurepip=yes \
             &&  if [[ -z "$BUILD_PYTHON_SKIP_COMPILE_TESTS" ]]; then \
