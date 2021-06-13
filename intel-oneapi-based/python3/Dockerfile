@@ -18,11 +18,6 @@ RUN true \
             openssl \
             libgfortran \
             libgomp \
-            R-core-devel \
-            libicu-devel \
-            libcurl-devel \
-            openssl-devel \
-            libxml2-devel \
     &&  dnf clean all \
     &&  rm -rf \
         /{tmp,var/tmp}/* \
